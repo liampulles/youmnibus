@@ -14,7 +14,7 @@ func main() {
 	yServ := getYoutubeServiceOrFail()
 
 	// Generic RabbitMQ setup
-	conn := getRabbitMQConnectionOrFail()
+	conn := rabbitmq.getRabbitMQConnectionOrFail()
 	ch := getRabbitMQChannelOrFail(conn)
 
 	// Input setup

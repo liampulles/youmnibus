@@ -1,4 +1,4 @@
-module youmnibus-capture
+module github.com/liampulles/youmnibus/capture
 
 go 1.12
 
