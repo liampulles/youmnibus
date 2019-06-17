@@ -1,15 +1,13 @@
 package rabbitmq
 
 import (
-	"log"
-	"os"
-	yerror "youmnibus-capture/internal/error"
+	yerror "github.com/liampulles/youmnibus/capture/internal/error"
 
 	"github.com/streadway/amqp"
 )
 
-func GetRabbitMQConnectionOrFail() *amqp.Connection {
-	conn, err := amqp.Dial(os.Getenv("AMQP_URL"))
+func GetRabbitMQConnectionOrFail(amqpUrl string) *amqp.Connection {
+	conn, err := amqp.Dial(amqpUrl)
 	yerror.FailOnError(err, "Could not establish connection to RabbitMQ")
 	return conn
 }
@@ -20,16 +18,38 @@ func GetRabbitMQChannelOrFail(conn *amqp.Connection) *amqp.Channel {
 	return ch
 }
 
-func GetRabbitMQQueueOrFail(ch *amqp.Channel, name string) amqp.Queue {
-	q, err := ch.QueueDeclare(
-		name,  // name
-		false, // durable
-		false, // delete when usused
-		false, // exclusive
-		false, // no-wait
-		nil,   // arguments
+func GetRabbitMQQueueWithDeadLetterExchangeOrFail(ch *amqp.Channel, queueName string, deadLetterExchangeName string) amqp.Queue {
+	// Configure a dead-letter-queue
+	err := ch.ExchangeDeclare(
+		deadLetterExchangeName, // name
+		"direct",               // kind
+		true,                   // durable
+		false,                  // delete when usused
+		false,                  // internal
+		false,                  // no-wait
+		nil,                    // arguments
 	)
-	yerror.FailOnError(err, "Could not establish RabbitMQ queue "+name)
+	yerror.FailOnError(err, "Could not establish RabbitMQ Dead Letter Exchange "+deadLetterExchangeName)
+
+	args := make(amqp.Table, 1)
+	args["x-dead-letter-exchange"] = deadLetterExchangeName
+	return getRabbitMQQueueOrFail(ch, queueName, args)
+}
+
+func GetRabbitMQQueueOrFail(ch *amqp.Channel, queueName string) amqp.Queue {
+	return getRabbitMQQueueOrFail(ch, queueName, make(amqp.Table))
+}
+
+func getRabbitMQQueueOrFail(ch *amqp.Channel, queueName string, args amqp.Table) amqp.Queue {
+	q, err := ch.QueueDeclare(
+		queueName, // name
+		true,      // durable
+		false,     // delete when usused
+		false,     // exclusive
+		false,     // no-wait
+		args,      // arguments
+	)
+	yerror.FailOnError(err, "Could not establish RabbitMQ queue "+queueName)
 	return q
 }
 
@@ -47,21 +67,14 @@ func GetRabbitMQConsumerOrFail(ch *amqp.Channel, q amqp.Queue, name string) <-ch
 	return cons
 }
 
-func PublishJSON(ch *amqp.Channel, q amqp.Queue, jsonBytes []byte) error {
+func PublishString(ch *amqp.Channel, q amqp.Queue, str string) error {
 	return ch.Publish(
 		"",     // exchange
 		q.Name, // routing key
 		false,  // mandatory
 		false,  // immediate
 		amqp.Publishing{
-			ContentType: "application/json",
-			Body:        jsonBytes,
+			ContentType: "text/plain",
+			Body:        []byte(str),
 		})
-}
-
-func LogAndNackOnError(err error, d amqp.Delivery, msgF string, args ...interface{}) {
-	if err != nil {
-		d.Nack(false, false)
-		log.Printf(msgF, args)
-	}
 }

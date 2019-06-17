@@ -1,0 +1,6 @@
+build:
+	go build ./...
+install: build
+	go install ./...
+dockerize: install
+	docker build -t youmnibus-capture -f Dockerfile.youmnibus-capture .
