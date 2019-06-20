@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 
-	yerror "github.com/liampulles/youmnibus/capture/internal/error"
+	yerror "github.com/liampulles/youmnibus/internal/error"
 )
 
 type Config struct {

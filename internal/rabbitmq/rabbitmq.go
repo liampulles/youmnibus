@@ -1,7 +1,7 @@
 package rabbitmq
 
 import (
-	yerror "github.com/liampulles/youmnibus/capture/internal/error"
+	yerror "github.com/liampulles/youmnibus/internal/error"
 
 	"github.com/streadway/amqp"
 )
@@ -65,16 +65,4 @@ func GetRabbitMQConsumerOrFail(ch *amqp.Channel, q amqp.Queue, name string) <-ch
 	)
 	yerror.FailOnError(err, "Failed to register RabbitMQ consumer "+name)
 	return cons
-}
-
-func PublishString(ch *amqp.Channel, q amqp.Queue, str string) error {
-	return ch.Publish(
-		"",     // exchange
-		q.Name, // routing key
-		false,  // mandatory
-		false,  // immediate
-		amqp.Publishing{
-			ContentType: "text/plain",
-			Body:        []byte(str),
-		})
 }

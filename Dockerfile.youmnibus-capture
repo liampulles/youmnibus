@@ -1,0 +1,5 @@
+FROM youmnibus-base
+
+FROM scratch
+COPY --from=0 /go/bin/youmnibus-capture /go/bin/youmnibus-capture
+ENTRYPOINT ["/go/bin/youmnibus-capture"]

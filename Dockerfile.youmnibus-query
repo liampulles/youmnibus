@@ -1,0 +1,8 @@
+FROM youmnibus-base
+
+FROM scratch
+COPY --from=0 /go/bin/youmnibus-query /go/bin/youmnibus-query
+
+EXPOSE 8080/tcp
+
+ENTRYPOINT ["/go/bin/youmnibus-query"]

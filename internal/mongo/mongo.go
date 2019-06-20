@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	yerror "github.com/liampulles/youmnibus/capture/internal/error"
+	yerror "github.com/liampulles/youmnibus/internal/error"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -38,15 +38,38 @@ func StoreChannelData(mColl *mongo.Collection, chData *youtube.ChannelListRespon
 	// Add some additional data to store
 	toStore := ChannelData{channelId, callTime.Format(time.RFC3339Nano), chData}
 
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), mongoTimeout)
 	id, err := mColl.InsertOne(ctx, toStore)
 	cancel()
 	return id, err
 }
 
 func RollbackInsertion(mColl *mongo.Collection, mRes *mongo.InsertOneResult) error {
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), mongoTimeout)
 	_, err := mColl.DeleteOne(ctx, bson.D{{"_id", bson.D{{"$eq", mRes.InsertedID}}}})
 	cancel()
 	return err
+}
+
+func RetrieveChannelData(mColl *mongo.Collection, channelID string) ([]*ChannelData, error) {
+	channelData := make([]*ChannelData, 0)
+	ctx, cancel := context.WithTimeout(context.Background(), mongoTimeout)
+	cur, err := mColl.Find(ctx, bson.D{{"channelid", bson.D{{"$eq", channelID}}}})
+	if err != nil {
+		return nil, err
+	}
+	defer cur.Close(ctx)
+	for cur.Next(ctx) {
+		var result ChannelData
+		err := cur.Decode(&result)
+		if err != nil {
+			return nil, err
+		}
+		channelData = append(channelData, &result)
+	}
+	cancel()
+	if len(channelData) == 0 {
+		return nil, nil
+	}
+	return channelData, nil
 }
