@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/bradfitz/gomemcache/memcache"
+	"github.com/liampulles/youmnibus/internal/config"
 	"github.com/liampulles/youmnibus/internal/mongo"
 	"github.com/liampulles/youmnibus/internal/project"
 	"github.com/liampulles/youmnibus/internal/rabbitmq"
@@ -19,7 +20,7 @@ func main() {
 	yServ := youtube.GetYoutubeServiceOrFail(conf.YouTubeAPIKey)
 
 	// RabbitMQ setup
-	conn := rabbitmq.GetRabbitMQConnectionOrFail(conf.AMQPURL)
+	conn := rabbitmq.GetRabbitMQConnectionOrFail(config.ConstructAMQPURL(conf.RabbitMQUsername, conf.RabbitMQPassword, conf.RabbitMQHost, conf.RabbitMQPort))
 	defer conn.Close()
 	inputCh := rabbitmq.GetRabbitMQChannelOrFail(conn)
 	defer inputCh.Close()
@@ -27,13 +28,13 @@ func main() {
 	inputCons := rabbitmq.GetRabbitMQConsumerOrFail(inputCh, inputQ, conf.ConsumerName)
 
 	// Mongo setup
-	mClient := mongo.GetAndConnectMongoClientOrFail(conf.MongoURL)
+	mClient := mongo.GetAndConnectMongoClientOrFail(config.MongoURL(conf.MongoHosts, conf.MongoPort))
 	mColl := mongo.GetCollection(mClient, conf.MongoDatabase, conf.MongoCollection)
 
 	// Memcache setup
-	subsClient := project.GetMemcacheClient(conf.MemcacheSubscribersURL)
-	viewsClient := project.GetMemcacheClient(conf.MemcacheViewsURL)
-	videosClient := project.GetMemcacheClient(conf.MemcacheVideosURL)
+	subsClient := project.GetMemcacheClient(conf.MemcacheSubscribersURLs)
+	viewsClient := project.GetMemcacheClient(conf.MemcacheViewsURLs)
+	videosClient := project.GetMemcacheClient(conf.MemcacheVideosURLs)
 
 	// Run the consumer loop
 	log.Printf(" [*] Waiting for messages. To exit press CTRL+C / SIGKILL")

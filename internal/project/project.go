@@ -3,6 +3,7 @@ package project
 import (
 	"encoding/json"
 	"fmt"
+	"strings"
 
 	"github.com/liampulles/youmnibus/internal/mongo"
 
@@ -25,8 +26,9 @@ type VideosAt struct {
 	At         string `json:"at,omitempty"`
 }
 
-func GetMemcacheClient(memcacheURL string) *memcache.Client {
-	return memcache.New(memcacheURL)
+func GetMemcacheClient(memcacheURLs string) *memcache.Client {
+	urls := strings.Split(memcacheURLs, ",")
+	return memcache.New(urls...)
 }
 
 func MapSubscribersAt(channelID string, channelDatums []*mongo.ChannelData) ([]*SubscribersAt, error) {

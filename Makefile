@@ -3,7 +3,6 @@ build:
 install: build
 	go install ./...
 docker-build: install
-	docker build -t youmnibus-base -f docker/Dockerfile.youmnibus-base .
 	docker build -t youmnibus-burden -f docker/Dockerfile.youmnibus-query .
 	docker build -t youmnibus-capture -f docker/Dockerfile.youmnibus-capture .
 	docker build -t youmnibus-query -f docker/Dockerfile.youmnibus-query .

@@ -1,2 +1,3 @@
 .vscode/
 channelIDs.txt
+kubernetes/youtube-api-key-secret.yml

@@ -6,6 +6,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/liampulles/youmnibus/internal/config"
 	yerror "github.com/liampulles/youmnibus/internal/error"
 	"github.com/liampulles/youmnibus/internal/rabbitmq"
 )
@@ -17,7 +18,7 @@ func main() {
 	conf := GetConfig()
 
 	// RabbitMQ setup
-	conn := rabbitmq.GetRabbitMQConnectionOrFail(conf.AMQPURL)
+	conn := rabbitmq.GetRabbitMQConnectionOrFail(config.ConstructAMQPURL(conf.RabbitMQUsername, conf.RabbitMQPassword, conf.RabbitMQHost, conf.RabbitMQPort))
 	defer conn.Close()
 	ch := rabbitmq.GetRabbitMQChannelOrFail(conn)
 	defer ch.Close()

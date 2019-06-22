@@ -13,14 +13,18 @@ type Config struct {
 	InputDeadLetterExchange string
 	OutputQueueName         string
 	ConsumerName            string
-	AMQPURL                 string
+	RabbitMQUsername        string
+	RabbitMQPassword        string
+	RabbitMQHost            string
+	RabbitMQPort            string
 	YouTubeAPIKey           string
-	MongoURL                string
+	MongoHosts              string
+	MongoPort               string
 	MongoDatabase           string
 	MongoCollection         string
-	MemcacheSubscribersURL  string
-	MemcacheViewsURL        string
-	MemcacheVideosURL       string
+	MemcacheSubscribersURLs string
+	MemcacheViewsURLs       string
+	MemcacheVideosURLs      string
 }
 
 func GetConfigOrFail() *Config {
@@ -34,14 +38,18 @@ func GetConfigOrFail() *Config {
 		InputDeadLetterExchange: defaultIfEnvNil("INPUT_DEAD_LETTER_EXCHANGE", "failedChannelsToFetch"),
 		OutputQueueName:         defaultIfEnvNil("OUTPUT_QUEUE", "fetchedChannels"),
 		ConsumerName:            defaultIfEnvNil("NAME", ""),
-		AMQPURL:                 defaultIfEnvNil("AMQP_URL", "amqp://guest:guest@localhost:5672/"),
+		RabbitMQUsername:        defaultIfEnvNil("RABBITMQ_USERNAME", "guest"),
+		RabbitMQPassword:        defaultIfEnvNil("RABBITMQ_PASSWORD", "guest"),
+		RabbitMQHost:            defaultIfEnvNil("RABBITMQ_HOST", "localhost"),
+		RabbitMQPort:            defaultIfEnvNil("RABBITMQ_PORT", "5672"),
 		YouTubeAPIKey:           youtubeAPIKey,
-		MongoURL:                defaultIfEnvNil("MONGO_URL", "mongodb://localhost:27017"),
+		MongoHosts:              defaultIfEnvNil("MONGO_HOSTS", "localhost"),
+		MongoPort:               defaultIfEnvNil("MONGO_PORT", "27017"),
 		MongoDatabase:           defaultIfEnvNil("MONGO_DATABASE", "youmnibus"),
 		MongoCollection:         defaultIfEnvNil("MONGO_CAPTURES_COLLECTION", "captures"),
-		MemcacheSubscribersURL:  defaultIfEnvNil("MEMCACHE_SUBSCRIBERS_URL", "localhost:11211"),
-		MemcacheViewsURL:        defaultIfEnvNil("MEMCACHE_VIEWS_URL", "localhost:11212"),
-		MemcacheVideosURL:       defaultIfEnvNil("MEMCACHE_VIDEOS_URL", "localhost:11213"),
+		MemcacheSubscribersURLs: defaultIfEnvNil("MEMCACHE_SUBSCRIBERS_URLS", "localhost:11211"),
+		MemcacheViewsURLs:       defaultIfEnvNil("MEMCACHE_VIEWS_URLS", "localhost:11212"),
+		MemcacheVideosURLs:      defaultIfEnvNil("MEMCACHE_VIDEOS_URLS", "localhost:11213"),
 	}
 }
 

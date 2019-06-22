@@ -5,6 +5,7 @@ import (
 
 	"github.com/bradfitz/gomemcache/memcache"
 	"github.com/gin-gonic/gin"
+	"github.com/liampulles/youmnibus/internal/config"
 	"github.com/liampulles/youmnibus/internal/mongo"
 	"github.com/liampulles/youmnibus/internal/project"
 )
@@ -14,13 +15,13 @@ func main() {
 	conf := GetConfig()
 
 	// Mongo setup
-	mClient := mongo.GetAndConnectMongoClientOrFail(conf.MongoURL)
+	mClient := mongo.GetAndConnectMongoClientOrFail(config.MongoURL(conf.MongoHosts, conf.MongoPort))
 	mColl := mongo.GetCollection(mClient, conf.MongoDatabase, conf.MongoCollection)
 
 	// Memcache setup
-	subsClient := project.GetMemcacheClient(conf.MemcacheSubscribersURL)
-	viewsClient := project.GetMemcacheClient(conf.MemcacheViewsURL)
-	videosClient := project.GetMemcacheClient(conf.MemcacheVideosURL)
+	subsClient := project.GetMemcacheClient(conf.MemcacheSubscribersURLs)
+	viewsClient := project.GetMemcacheClient(conf.MemcacheViewsURLs)
+	videosClient := project.GetMemcacheClient(conf.MemcacheVideosURLs)
 
 	// Creates a gin router with default middleware:
 	router := gin.Default()

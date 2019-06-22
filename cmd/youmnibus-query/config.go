@@ -7,24 +7,26 @@ import (
 )
 
 type Config struct {
-	MongoURL               string
-	MongoDatabase          string
-	MongoCollection        string
-	MemcacheSubscribersURL string
-	MemcacheViewsURL       string
-	MemcacheVideosURL      string
-	ServerPort             string
+	MongoHosts              string
+	MongoPort               string
+	MongoDatabase           string
+	MongoCollection         string
+	MemcacheSubscribersURLs string
+	MemcacheViewsURLs       string
+	MemcacheVideosURLs      string
+	ServerPort              string
 }
 
 func GetConfig() *Config {
 	return &Config{
-		MongoURL:               defaultIfEnvNil("MONGO_URL", "mongodb://localhost:27017"),
-		MongoDatabase:          defaultIfEnvNil("MONGO_DATABASE", "youmnibus"),
-		MongoCollection:        defaultIfEnvNil("MONGO_CAPTURES_COLLECTION", "captures"),
-		MemcacheSubscribersURL: defaultIfEnvNil("MEMCACHE_SUBSCRIBERS_URL", "localhost:11211"),
-		MemcacheViewsURL:       defaultIfEnvNil("MEMCACHE_VIEWS_URL", "localhost:11212"),
-		MemcacheVideosURL:      defaultIfEnvNil("MEMCACHE_VIDEOS_URL", "localhost:11213"),
-		ServerPort:             defaultIfEnvNil("SERVER_PORT", "8080"),
+		MongoHosts:              defaultIfEnvNil("MONGO_HOSTS", "localhost"),
+		MongoPort:               defaultIfEnvNil("MONGO_PORT", "27017"),
+		MongoDatabase:           defaultIfEnvNil("MONGO_DATABASE", "youmnibus"),
+		MongoCollection:         defaultIfEnvNil("MONGO_CAPTURES_COLLECTION", "captures"),
+		MemcacheSubscribersURLs: defaultIfEnvNil("MEMCACHE_SUBSCRIBERS_URLS", "localhost:11211"),
+		MemcacheViewsURLs:       defaultIfEnvNil("MEMCACHE_VIEWS_URLS", "localhost:11212"),
+		MemcacheVideosURLs:      defaultIfEnvNil("MEMCACHE_VIDEOS_URLS", "localhost:11213"),
+		ServerPort:              defaultIfEnvNil("SERVER_PORT", "8080"),
 	}
 }
 
