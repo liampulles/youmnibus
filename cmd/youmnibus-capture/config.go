@@ -24,12 +24,6 @@ type Config struct {
 }
 
 func GetConfigOrFail() *Config {
-	defaultName, err := os.Hostname()
-	if err != nil {
-		log.Printf("Could not determine hostname: %s", err)
-		defaultName = "worker"
-	}
-
 	youtubeAPIKey, err := errIfEnvNil("YOUTUBE_API_KEY")
 	if err != nil {
 		yerror.FailOnError(err, "Failed to get config")
@@ -39,7 +33,7 @@ func GetConfigOrFail() *Config {
 		InputQueueName:          defaultIfEnvNil("INPUT_QUEUE", "channelsToFetch"),
 		InputDeadLetterExchange: defaultIfEnvNil("INPUT_DEAD_LETTER_EXCHANGE", "failedChannelsToFetch"),
 		OutputQueueName:         defaultIfEnvNil("OUTPUT_QUEUE", "fetchedChannels"),
-		ConsumerName:            defaultIfEnvNil("NAME", defaultName),
+		ConsumerName:            defaultIfEnvNil("NAME", ""),
 		AMQPURL:                 defaultIfEnvNil("AMQP_URL", "amqp://guest:guest@localhost:5672/"),
 		YouTubeAPIKey:           youtubeAPIKey,
 		MongoURL:                defaultIfEnvNil("MONGO_URL", "mongodb://localhost:27017"),

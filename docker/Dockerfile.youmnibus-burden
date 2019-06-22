@@ -1,0 +1,5 @@
+FROM youmnibus-base
+
+FROM scratch
+COPY --from=0 /go/bin/youmnibus-burden /go/bin/youmnibus-burden
+ENTRYPOINT ["/go/bin/youmnibus-burden"]

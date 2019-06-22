@@ -15,6 +15,12 @@ func GetRabbitMQConnectionOrFail(amqpUrl string) *amqp.Connection {
 func GetRabbitMQChannelOrFail(conn *amqp.Connection) *amqp.Channel {
 	ch, err := conn.Channel()
 	yerror.FailOnError(err, "Could not establish RabbitMQ channel")
+	err = ch.Qos(
+		1,     // prefetch count
+		0,     // prefetch size
+		false, // global
+	)
+	yerror.FailOnError(err, "Could not establish QoS for RabbitMQ channel")
 	return ch
 }
 
@@ -44,7 +50,7 @@ func getRabbitMQQueueOrFail(ch *amqp.Channel, queueName string, args amqp.Table)
 	q, err := ch.QueueDeclare(
 		queueName, // name
 		true,      // durable
-		false,     // delete when usused
+		false,     // delete when unused
 		false,     // exclusive
 		false,     // no-wait
 		args,      // arguments
@@ -56,7 +62,7 @@ func getRabbitMQQueueOrFail(ch *amqp.Channel, queueName string, args amqp.Table)
 func GetRabbitMQConsumerOrFail(ch *amqp.Channel, q amqp.Queue, name string) <-chan amqp.Delivery {
 	cons, err := ch.Consume(
 		q.Name, // queue
-		name,   // consumer
+		"",     // consumer
 		false,  // auto-ack
 		false,  // exclusive
 		false,  // no-local
@@ -65,4 +71,16 @@ func GetRabbitMQConsumerOrFail(ch *amqp.Channel, q amqp.Queue, name string) <-ch
 	)
 	yerror.FailOnError(err, "Failed to register RabbitMQ consumer "+name)
 	return cons
+}
+
+func PublishString(ch *amqp.Channel, q amqp.Queue, body string) error {
+	return ch.Publish(
+		"",     // exchange
+		q.Name, // routing key
+		false,  // mandatory
+		false,  // immediate
+		amqp.Publishing{
+			ContentType: "text/plain",
+			Body:        []byte(body),
+		})
 }

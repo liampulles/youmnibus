@@ -124,5 +124,5 @@ func main() {
 		c.Data(http.StatusOK, "application/json", result)
 	})
 
-	router.Run(":8080")
+	router.Run(":" + conf.ServerPort)
 }

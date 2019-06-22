@@ -24,6 +24,7 @@ func GetConfig() *Config {
 		MemcacheSubscribersURL: defaultIfEnvNil("MEMCACHE_SUBSCRIBERS_URL", "localhost:11211"),
 		MemcacheViewsURL:       defaultIfEnvNil("MEMCACHE_VIEWS_URL", "localhost:11212"),
 		MemcacheVideosURL:      defaultIfEnvNil("MEMCACHE_VIDEOS_URL", "localhost:11213"),
+		ServerPort:             defaultIfEnvNil("SERVER_PORT", "8080"),
 	}
 }
 
