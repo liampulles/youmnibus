@@ -3,7 +3,7 @@ build:
 install: build
 	go install ./...
 docker-build: install
-	docker build -t youmnibus-burden -f docker/Dockerfile.youmnibus-query .
+	docker build -t youmnibus-burden -f docker/Dockerfile.youmnibus-burden .
 	docker build -t youmnibus-capture -f docker/Dockerfile.youmnibus-capture .
 	docker build -t youmnibus-query -f docker/Dockerfile.youmnibus-query .
 docker-push:
@@ -14,7 +14,7 @@ docker-push:
 	docker push lpulles/youmnibus-capture:0.1
 	docker push lpulles/youmnibus-query:0.1
 launch-clean:
-	docker rm mongo rabbitmq memecache-subscribers memecache-views memcache-videos
+	docker rm mongo rabbitmq memcache-subscribers memcache-views memcache-videos
 launch-mongo-docker:
 	docker run --name mongo -v /data/db:/data/db -d -p 27017:27017 mongo
 launch-rabbitmq-docker:

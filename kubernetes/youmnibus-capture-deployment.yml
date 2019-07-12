@@ -1,0 +1,50 @@
+---
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: Deployment
+metadata:
+  name: youmnibus-capture
+  namespace: youmnibus
+spec:
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: youmnibus-capture
+  replicas: 1 # tells deployment to run 1 pods matching the template
+  template: # create pods using pod definition in this template
+    metadata:
+      namespace: youmnibus
+      labels:
+        app: youmnibus-capture
+    spec:
+      containers:
+      - name: youmnibus-capture
+        image: lpulles/youmnibus-capture:0.1
+        env:
+        - name: YOUTUBE_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: youmnibus-youtube-api-key
+              key: youtubeApiKey
+        - name: RABBITMQ_USERNAME
+          value: "rabbit"
+        - name: RABBITMQ_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: rabbitmq-pass
+              name: rabbitmq-rabbitmq-secret
+              ports:
+        - name: RABBITMQ_HOST
+          value: $(RABBITMQ_RABBITMQ_SVC_SERVICE_HOST)
+        - name: RABBITMQ_PORT
+          value: $(RABBITMQ_RABBITMQ_SVC_SERVICE_PORT)
+        - name: MONGO_HOSTS
+          value: "mongo-0.mongo,mongo-1.mongo,mongo-2.mongo"
+        - name: MONGO_PORT
+          value: "27017"
+        - name: MEMCACHE_SUBSCRIBERS_URLS
+          value: "memcached-subscribers-memcached-0.memcached-subscribers-memcached-svc.youmnibus.svc.cluster.local:11211,memcached-subscribers-memcached-1.memcached-subscribers-memcached-svc.youmnibus.svc.cluster.local:11211,memcached-subscribers-memcached-2.memcached-subscribers-memcached-svc.youmnibus.svc.cluster.local:11211"
+        - name: MEMCACHE_VIDEOS_URLS
+          value: "memcached-videos-memcached-0.memcached-videos-memcached-svc.youmnibus.svc.cluster.local:11211,memcached-videos-memcached-1.memcached-videos-memcached-svc.youmnibus.svc.cluster.local:11211,memcached-videos-memcached-2.memcached-videos-memcached-svc.youmnibus.svc.cluster.local:11211"
+        - name: MEMCACHE_VIEWS_URLS
+          value: "memcached-views-memcached-0.memcached-views-memcached-svc.youmnibus.svc.cluster.local:11211,memcached-views-memcached-1.memcached-views-memcached-svc.youmnibus.svc.cluster.local:11211,memcached-views-memcached-2.memcached-views-memcached-svc.youmnibus.svc.cluster.local:11211"

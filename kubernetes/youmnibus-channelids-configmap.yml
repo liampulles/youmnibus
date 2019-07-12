@@ -1,0 +1,26 @@
+apiVersion: v1
+data:
+  channelIDs.txt: |
+    UC0BfPXleDan8dMbel6-C89Q
+    UCXuqSBlHAE6Xw-yeJA0Tunw
+    UCVZlxkKqlvVqzRJXhAGq42Q
+    UCmA54XhpFJWyw_Bsj1jYsMw
+    UCrTNhL_yO3tPTdQ5XgmmWjA
+    UCoxcjq-8xIDTYp3uz647V5A
+    UCzWwWbbKHg4aodl0S35R6XA
+    UCfsuI3-92QNO3DVy06PO9wg
+    UCJdKr0Bgd_5saZYqLCa9mng
+    UCeeFfhMcJa1kjtfZAGskOCA
+    UCDyqjn-9rKdcAe0gTMAkqyg
+    UCftcLVz-jtPXoH3cWUUDwYw
+    UC0uVZd8N7FfIZnPu0y7o95A
+    UCGlbTwyt9cw4XZ9jRqrPeUg
+    UC9pgQfOXRsp4UKrI8q0zjXQ
+    UCBZiUUYeLfS5rIj4TQvgSvA
+    UCYJdpnjuSWVOLgGT9fIzL0g
+    UClq42foiSgl7sSpLupnugGA
+kind: ConfigMap
+metadata:
+  name: youmnibus-channelids
+  namespace: youmnibus
+
