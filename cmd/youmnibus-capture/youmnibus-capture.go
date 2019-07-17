@@ -15,6 +15,7 @@ import (
 func main() {
 	// Get config
 	conf := GetConfigOrFail()
+	log.Printf("API key: %s", conf.YouTubeAPIKey)
 
 	// Youtube setup
 	yServ := youtube.GetYoutubeServiceOrFail(conf.YouTubeAPIKey)
