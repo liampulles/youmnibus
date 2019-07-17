@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/bradfitz/gomemcache/memcache"
@@ -37,22 +38,26 @@ func main() {
 			channelData, err := mongo.RetrieveChannelData(mColl, channelID)
 			if err != nil {
 				c.JSON(http.StatusInternalServerError, gin.H{"error": err})
+				log.Printf("Error while calling mongo: %s", err)
 				return
 			}
 			// Project the data
 			subsAt, err := project.MapSubscribersAt(channelID, channelData)
 			if err != nil {
 				c.JSON(http.StatusInternalServerError, gin.H{"error": err})
+				log.Printf("Error while projecting data: %s", err)
 				return
 			}
 			// Cache the projected data
 			result, err = project.MarshalAndStore(subsClient, channelID, subsAt)
 			if err != nil {
 				c.JSON(http.StatusInternalServerError, gin.H{"error": err})
+				log.Printf("Error while caching data: %s", err)
 				return
 			}
 		} else {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err})
+			log.Printf("Error while calling cache: %s", err)
 			return
 		}
 		// Return the data
@@ -102,6 +107,7 @@ func main() {
 			// Get data from Mongo
 			channelData, err := mongo.RetrieveChannelData(mColl, channelID)
 			if err != nil {
+
 				c.JSON(http.StatusInternalServerError, gin.H{"error": err})
 				return
 			}

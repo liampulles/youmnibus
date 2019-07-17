@@ -4,14 +4,14 @@ metadata:
   name: youmnibus-burden
   namespace: youmnibus
 spec:
-  schedule: "*/15 * * * *"
+  schedule: "*/1 * * * *"
   jobTemplate:
     spec:
       template:
         spec:
           containers:
           - name: youmnibus-burden
-            image: lpulles/youmnibus-burden:0.1
+            image: lpulles/youmnibus-burden:0.1.5
             env:
             - name: RABBITMQ_USERNAME
               value: "rabbit"

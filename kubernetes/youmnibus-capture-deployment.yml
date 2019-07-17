@@ -10,7 +10,7 @@ spec:
   selector:
     matchLabels:
       app: youmnibus-capture
-  replicas: 1 # tells deployment to run 1 pods matching the template
+  replicas: 1 # tells deployment to run 2 pods matching the template
   template: # create pods using pod definition in this template
     metadata:
       namespace: youmnibus
@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
       - name: youmnibus-capture
-        image: lpulles/youmnibus-capture:0.1
+        image: lpulles/youmnibus-capture:0.1.5
         env:
         - name: YOUTUBE_API_KEY
           valueFrom:
