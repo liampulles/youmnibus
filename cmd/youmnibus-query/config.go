@@ -9,6 +9,8 @@ import (
 type Config struct {
 	MongoHosts              string
 	MongoPort               string
+	MongoUser               string
+	MongoPass               string
 	MongoDatabase           string
 	MongoCollection         string
 	MemcacheSubscribersURLs string
@@ -21,6 +23,8 @@ func GetConfig() *Config {
 	return &Config{
 		MongoHosts:              defaultIfEnvNil("MONGO_HOSTS", "localhost"),
 		MongoPort:               defaultIfEnvNil("MONGO_PORT", "27017"),
+		MongoUser:               defaultIfEnvNil("MONGO_USER", "youmnibus"),
+		MongoPass:               defaultIfEnvNil("MONGO_PASS", "youmnibus"),
 		MongoDatabase:           defaultIfEnvNil("MONGO_DATABASE", "youmnibus"),
 		MongoCollection:         defaultIfEnvNil("MONGO_CAPTURES_COLLECTION", "captures"),
 		MemcacheSubscribersURLs: defaultIfEnvNil("MEMCACHE_SUBSCRIBERS_URLS", "localhost:11211"),

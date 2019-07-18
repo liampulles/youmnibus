@@ -19,10 +19,10 @@ spec:
     spec:
       containers:
       - name: youmnibus-query
-        image: lpulles/youmnibus-query:0.1
+        image: lpulles/youmnibus-query:0.1.6
         env:
         - name: MONGO_HOSTS
-          value: "mongo-0.mongo,mongo-1.mongo,mongo-2.mongo"
+          value: "mongod-0.mongodb-service.youmnibus.svc.cluster.local,mongod-1.mongodb-service.youmnibus.svc.cluster.local,mongod-2.mongodb-service.youmnibus.svc.cluster.local"
         - name: MONGO_PORT
           value: "27017"
         - name: MEMCACHE_SUBSCRIBERS_URLS

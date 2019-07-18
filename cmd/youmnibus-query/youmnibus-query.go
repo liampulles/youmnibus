@@ -16,7 +16,7 @@ func main() {
 	conf := GetConfig()
 
 	// Mongo setup
-	mClient := mongo.GetAndConnectMongoClientOrFail(config.MongoURL(conf.MongoHosts, conf.MongoPort))
+	mClient := mongo.GetAndConnectMongoClientOrFail(config.MongoURL(conf.MongoHosts, conf.MongoPort, conf.MongoUser, conf.MongoPass))
 	mColl := mongo.GetCollection(mClient, conf.MongoDatabase, conf.MongoCollection)
 
 	// Memcache setup
