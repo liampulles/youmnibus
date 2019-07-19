@@ -1,0 +1,2 @@
+Check can connect to kubectl
+Playthrough demo

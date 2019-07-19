@@ -12,6 +12,7 @@ import (
 )
 
 func main() {
+	// Get the time so we can later compute time elapsed for this job
 	start := time.Now()
 
 	// Get config

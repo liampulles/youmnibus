@@ -10,7 +10,7 @@ spec:
   selector:
     matchLabels:
       app: youmnibus-query
-  replicas: 3 # tells deployment to run 1 pods matching the template
+  replicas: 3 # tells deployment to run 3 pods matching the template
   template: # create pods using pod definition in this template
     metadata:
       namespace: youmnibus
@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
       - name: youmnibus-query
-        image: lpulles/youmnibus-query:0.1.6
+        image: lpulles/youmnibus-query:0.1.7
         env:
         - name: MONGO_HOSTS
           value: "mongod-0.mongodb-service.youmnibus.svc.cluster.local,mongod-1.mongodb-service.youmnibus.svc.cluster.local,mongod-2.mongodb-service.youmnibus.svc.cluster.local"

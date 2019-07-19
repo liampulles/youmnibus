@@ -1,0 +1,5 @@
+ - Show Golang config
+ - Show Query app
+ - make kube-get-all
+ - make kube-run-burden
+ - Deploy a new version of the query app

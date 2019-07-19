@@ -1,0 +1,35 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: youmnibus-burden-singlerun
+  namespace: youmnibus
+spec:
+  template:
+    spec:
+      containers:
+      - name: youmnibus-burden
+        image: lpulles/youmnibus-burden:0.1.7
+        env:
+        - name: RABBITMQ_USERNAME
+          value: "rabbit"
+        - name: RABBITMQ_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: rabbitmq-pass
+              name: rabbitmq-rabbitmq-secret
+        - name: RABBITMQ_HOST
+          value: $(RABBITMQ_RABBITMQ_SVC_SERVICE_HOST)
+        - name: RABBITMQ_PORT
+          value: $(RABBITMQ_RABBITMQ_SVC_SERVICE_PORT)
+        - name: CHANNEL_IDS_FILE
+          value: "/etc/config/channelIDs.txt"
+        volumeMounts:
+        - name: youmnibus-config-volume
+          mountPath: /etc/config
+      restartPolicy: Never
+      volumes:
+        - name: youmnibus-config-volume
+          configMap:
+            # Provide the name of the ConfigMap containing the files you want
+            # to add to the container
+            name: youmnibus-channelids

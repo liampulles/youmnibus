@@ -23,3 +23,7 @@ launch-memcache-docker:
 	docker run -d --name memcache-subscribers -p 11211:11211 memcached
 	docker run -d --name memcache-views -p 11212:11211 memcached
 	docker run -d --name memcache-videos -p 11213:11211 memcached
+kube-get-all:
+	kubectl get all --namespace=youmnibus
+kube-run-burden:
+	kubectl create -f ./kubernetes/youmnibus-burden-job.yml
