@@ -1,2 +1,3 @@
 Check can connect to kubectl
 Playthrough demo
+Login to Github
